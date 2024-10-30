@@ -33,7 +33,7 @@ radiateur_on = False
 eteindre()
 print("Radiateur étient")
 
-temp_consigne = 23
+temp_consigne = 21
 temp_u = 1
 
 time.sleep(10)
