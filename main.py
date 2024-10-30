@@ -34,7 +34,7 @@ eteindre()
 print("Radiateur étient")
 
 temp_consigne = 23
-temp_u = 0
+temp_u = 1
 
 time.sleep(10)
 
