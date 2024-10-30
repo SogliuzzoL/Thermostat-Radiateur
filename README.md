@@ -40,6 +40,20 @@ Ce projet permet de contrôler un radiateur via un thermostat connecté à un Ra
    sudo apt-get install libgpiod2
    ```
 
+## Mise en place du module émetteur-récepteur radio
+
+Pour configurer un module émetteur-récepteur radio 433MHz sur le Raspberry Pi, suivez les guides suivants :
+
+- [FanJoe - Utilisation d’un module radio 433 MHz](https://www.fanjoe.be/?p=2301)
+- [Pofilo - Home Assistant et les commandes radio 433 MHz](https://www.pofilo.fr/post/2019/05/29-home-assistant-433mhz/)
+
+**Note :** Lors de la configuration, il est nécessaire de modifier le fichier `codesend.cpp` (situé dans `~/433Utils/RPi_utils`) en changeant le nombre de bits de 24 à 32 bits pour assurer une compatibilité correcte. Une fois modifié, compilez le fichier avec la commande suivante :
+
+```bash
+cd ~/433Utils/RPi_utils
+make
+
+
 ## Lancer le programme
 
 1. **Activer l'environnement virtuel :**
