@@ -22,9 +22,18 @@ Ce projet permet de contrôler un radiateur via un thermostat connecté à un Ra
 
 2. **Installer les dépendances nécessaires :**
    ```bash
-   sudo pip install adafruit-python-shell
+   sudo env/bin/pip install adafruit-python-shell
    wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
-   sudo python raspi-blinka.py
+   sudo env/bin/python raspi-blinka.py
+   ```
+   Normalement, Blinka va vous demander de redémarrer, faites-le. S'il ne le propose pas, exécutez :
+   ```bash
+   sudo reboot
+   ```
+
+   Après le redémarrage, réactivez l'environnement virtuel :
+   ```bash
+   source env/bin/activate
    pip install adafruit-circuitpython-dht
    pip install RPi.GPIO
    pip install psutil
@@ -58,4 +67,3 @@ Par défaut, le capteur de température est connecté sur le GPIO 4. Pour change
 
 - **Le capteur ne fonctionne pas** : Assurez-vous que le câblage est correct et que la configuration du GPIO correspond au câblage physique.
 - **Les permissions GPIO sont refusées** : Essayez d'exécuter les commandes avec `sudo` si nécessaire.
-
