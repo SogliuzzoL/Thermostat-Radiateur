@@ -52,6 +52,7 @@ Pour configurer un module émetteur-récepteur radio 433MHz sur le Raspberry Pi,
 ```bash
 cd ~/433Utils/RPi_utils
 make
+```
 
 
 ## Lancer le programme
