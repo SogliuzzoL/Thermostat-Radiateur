@@ -5,6 +5,16 @@ import psutil
 import math
 import os
 
+def eteindre():
+    t0 = time.time()
+    while(time.time() - t0 < 3):
+        os.system(cmd_off)
+
+def allumer():
+    t0 = time.time()
+    while(time.time() - t0 < 3):
+        os.system(cmd_on)
+
 # We first check if a libgpiod process is running. If yes, we kill it!
 for proc in psutil.process_iter():
     if proc.name() == 'libgpiod_pulsein' or proc.name() == 'libgpiod_pulsei':
@@ -12,18 +22,21 @@ for proc in psutil.process_iter():
 sensor = adafruit_dht.DHT11(board.D4)
 
 # A configurer
-code_on = 0
-code_off = 0
-user = "user"
+code_on = 2388100096 
+code_off = 2169996288
+user = "sogliuzzo-loris"
 
 cmd_on = f"/home/{user}/433Utils/RPi_utils/codesend {code_on}"
 cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
 
 radiateur_on = False
-print(os.system(cmd_off))
+eteindre()
+print("Radiateur étient")
 
 temp_consigne = 23
 temp_u = 1
+
+time.sleep(10)
 
 while True:
     try:
@@ -35,10 +48,12 @@ while True:
 
         if not radiateur_on and temp_consigne - temp_u >= temp:
             radiateur_on = True
-            print(os.system(cmd_on), "- Radiateur allumé")
+            allumer()
+            print("Radiateur allumé")
         elif radiateur_on and temp_consigne + temp_u <= temp:
             radiateur_on = False
-            print(os.system(cmd_off), "- Radiateur éteint")
+            eteindre()
+            print("Radiateur éteint")
             
     except RuntimeError as error:
         print(error.args[0])
@@ -47,4 +62,4 @@ while True:
     except Exception as error:
         sensor.exit()
         raise error
-    time.sleep(2.0)
+    time.sleep(10.0)
