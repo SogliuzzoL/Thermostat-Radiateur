@@ -38,7 +38,7 @@ sys.stdout.flush()
 temp_consigne = 23
 temp_u = 1
 
-time.sleep(10)
+time.sleep(2)
 last_temp_ress = -1
 
 while True:
