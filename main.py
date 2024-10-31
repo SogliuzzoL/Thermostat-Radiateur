@@ -71,4 +71,4 @@ while True:
     except Exception as error:
         sensor.exit()
         raise error
-    time.sleep(10.0)
+    time.sleep(2.0)
