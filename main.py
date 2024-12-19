@@ -29,11 +29,11 @@ user = "sogliuzzo-loris"
 cmd_on = f"/home/{user}/433Utils/RPi_utils/codesend {code_on}"
 cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
 
-radiateur_on = False
+last_temp = 0
 eteindre()
 print("Radiateur étient")
 
-temp_consigne = 21
+temp_consigne = 22
 temp_u = 1
 
 time.sleep(10)
@@ -46,12 +46,12 @@ while True:
         temp_ressentie = temp + 0.5555 * ( 6.11 * math.exp( 5417.7530 * (1 / 273.16 - 1 / ( 273.16 + temp_rosee )) ) - 10 )
         print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
 
-        if not radiateur_on and temp_consigne - temp_u >= temp:
-            radiateur_on = True
+        if last_temp != temp_ressentie and temp_consigne - temp_u >= temp:
+            last_temp = temp_ressentie
             allumer()
             print("Radiateur allumé")
-        elif radiateur_on and temp_consigne + temp_u <= temp:
-            radiateur_on = False
+        elif last_temp != temp_ressentie and temp_consigne + temp_u <= temp:
+            last_temp = temp_ressentie
             eteindre()
             print("Radiateur éteint")
             
