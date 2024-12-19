@@ -55,6 +55,7 @@ while True:
             elif temp_consigne + temp_u <= temp:
                 eteindre()
                 print("Radiateur éteint")
+            sys.stdout.flush()
             
     except RuntimeError as error:
         print(error.args[0])
