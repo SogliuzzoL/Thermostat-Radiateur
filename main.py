@@ -35,7 +35,7 @@ eteindre()
 print("Radiateur étient")
 sys.stdout.flush()
 
-temp_consigne = 22
+temp_consigne = 26
 temp_u = 1
 
 time.sleep(2)
@@ -49,10 +49,10 @@ while True:
         if last_temp != temp_ressentie:
             print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
             last_temp = temp_ressentie
-            if temp_consigne - temp_u >= temp:
+            if temp_consigne - temp_u >= temp_ressentie:
                 allumer()
                 print("Radiateur allumé")
-            elif temp_consigne + temp_u <= temp:
+            elif temp_consigne + temp_u <= temp_ressentie:
                 eteindre()
                 print("Radiateur éteint")
             sys.stdout.flush()
