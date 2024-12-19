@@ -4,6 +4,7 @@ import adafruit_dht
 import psutil
 import math
 import os
+import sys
 
 def eteindre():
     t0 = time.time()
@@ -32,11 +33,13 @@ cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
 last_temp = 0
 eteindre()
 print("Radiateur étient")
+sys.stdout.flush()
 
 temp_consigne = 22
 temp_u = 1
 
-time.sleep(10)
+time.sleep(2)
+last_temp_ress = -1
 
 while True:
     try:
@@ -44,22 +47,27 @@ while True:
         humidity = sensor.humidity
         temp_rosee = 1 / ( 0.072655 / ( math.log(humidity / 100) + 17.27 * temp / ( 237.7 + temp ) ) - 1 / 237.7 )
         temp_ressentie = temp + 0.5555 * ( 6.11 * math.exp( 5417.7530 * (1 / 273.16 - 1 / ( 273.16 + temp_rosee )) ) - 10 )
-        print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
+        if last_temp_ress != temp_ressentie:
+            print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
+            sys.stdout.flush()
+            last_temp_ress = temp_ressentie
 
         if last_temp != temp_ressentie and temp_consigne - temp_u >= temp:
             last_temp = temp_ressentie
             allumer()
             print("Radiateur allumé")
-        elif last_temp != temp_ressentie and temp_consigne + temp_u <= temp:
-            last_temp = temp_ressentie
+        elif radiateur_on and temp_consigne + temp_u <= temp:
+            radiateur_on = False
             eteindre()
             print("Radiateur éteint")
+            sys.stdout.flush()
             
     except RuntimeError as error:
         print(error.args[0])
+        sys.stdout.flush()
         time.sleep(2.0)
         continue
     except Exception as error:
         sensor.exit()
         raise error
-    time.sleep(10.0)
+    time.sleep(2.0)
