@@ -35,7 +35,7 @@ eteindre()
 print("Radiateur étient")
 sys.stdout.flush()
 
-temp_consigne = 26
+temp_consigne = 27
 temp_u = 1
 
 time.sleep(2)
