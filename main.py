@@ -48,15 +48,13 @@ while True:
         temp_ressentie = temp + 0.5555 * ( 6.11 * math.exp( 5417.7530 * (1 / 273.16 - 1 / ( 273.16 + temp_rosee )) ) - 10 )
         if last_temp != temp_ressentie:
             print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
-
-        if last_temp != temp_ressentie and temp_consigne - temp_u >= temp:
             last_temp = temp_ressentie
-            allumer()
-            print("Radiateur allumé")
-        elif last_temp != temp_ressentie and temp_consigne + temp_u <= temp:
-            last_temp = temp_ressentie
-            eteindre()
-            print("Radiateur éteint")
+            if temp_consigne - temp_u >= temp:
+                allumer()
+                print("Radiateur allumé")
+            elif temp_consigne + temp_u <= temp:
+                eteindre()
+                print("Radiateur éteint")
             
     except RuntimeError as error:
         print(error.args[0])
