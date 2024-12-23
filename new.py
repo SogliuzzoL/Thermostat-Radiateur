@@ -116,7 +116,6 @@ def get_data():
 def set_temperature():
     global temp_consigne
     new_temp = request.json.get('temp_consigne')
-    print(new_temp)
     if new_temp is not None:
         temp_consigne = new_temp
         data["temp_consigne"] = temp_consigne
