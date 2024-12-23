@@ -18,31 +18,5 @@
         <input type="number" id="temp_consigne" name="temp_consigne" step="0.1" value="{{ data.temperature_consigne }}" required>
         <button type="submit">Mettre à jour</button>
     </form>
-    
-    <script>
-        document.getElementById("tempForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Empêche l'envoi du formulaire classique
-
-            const tempConsigne = document.getElementById("temp_consigne").value;
-
-            fetch("https://raspi.sogliuzzo.com/set_temperature", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify({ temp_consigne: parseFloat(tempConsigne) })
-            })
-            .then(response => response.json()) // Attendre la réponse du serveur en JSON
-            .then(data => {
-                console.log("Réponse du serveur:", data);
-                // Vous pouvez afficher une confirmation ou effectuer une autre action
-            })
-            .catch(error => {
-                console.error("Erreur:", error);
-            });
-        });
-    </script>
-
 </body>
 </html>
