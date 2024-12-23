@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiateur Monitor</title>
+</head>
+<body>
+    <h1>Statut du Radiateur</h1>
+    <p>Température : {{ data.temperature }}°C</p>
+    <p>Température ressentie : {{ data.temperature_ressentie }}°C</p>
+    <p>Humidité : {{ data.humidity }}%</p>
+    <p>État du radiateur : {{ data.radiator_state }}</p>
+    <h2>Historique</h2>
+    <ul>
+        {% for entry in history %}
+        <li>{{ entry.time }} - {{ entry.state }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
