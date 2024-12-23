@@ -82,6 +82,7 @@ def monitor_temperature():
             })
 
             if last_temp != temp_ressentie:
+                print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
                 last_temp = temp_ressentie
                 if temp_consigne - temp_u >= temp:
                     allumer()
