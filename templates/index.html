@@ -17,5 +17,12 @@
         <li>{{ entry.time }} - {{ entry.state }}</li>
         {% endfor %}
     </ul>
+    <h2>Réglage de la température</h2>
+    <form action="/set_temperature" method="post">
+        <label for="temp_consigne">Température de consigne :</label>
+        <input type="number" id="temp_consigne" name="temp_consigne" step="0.1" value="{{ data.temperature_consigne }}" required>
+        <button type="submit">Mettre à jour</button>
+    </form>
+
 </body>
 </html>

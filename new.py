@@ -7,6 +7,7 @@ import math
 import os
 import threading
 import sqlite3
+import sys
 
 # Configuration initiale
 sensor = adafruit_dht.DHT11(board.D4)
@@ -44,12 +45,14 @@ def eteindre():
     global radiator_state
     os.system(cmd_off)
     radiator_state = "Off"
+    print("Radiateur éteint")
     save_history("Radiateur éteint")
 
 def allumer():
     global radiator_state
     os.system(cmd_on)
     radiator_state = "On"
+    print("Radiateur allumé")
     save_history("Radiateur allumé")
 
 def save_history(state):
@@ -89,6 +92,7 @@ def monitor_temperature():
         except Exception as error:
             sensor.exit()
             print(f"Exception: {error}")
+        sys.stdout.flush()
         time.sleep(2)
 
 # Démarrage du serveur Flask
