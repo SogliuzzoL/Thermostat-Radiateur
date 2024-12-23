@@ -78,7 +78,7 @@ def monitor_temperature():
                 "temperature_ressentie": round(temp_ressentie, 2),
                 "humidity": humidity,
                 "radiator_state": radiator_state,
-                "temp_consigne": temp_consigne
+                "temperature_consigne": temp_consigne
             })
 
             if last_temp != temp_ressentie:
