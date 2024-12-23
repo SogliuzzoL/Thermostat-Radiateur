@@ -43,14 +43,18 @@ for proc in psutil.process_iter():
 
 def eteindre():
     global radiator_state
-    os.system(cmd_off)
+    t0 = time.time()
+    while(time.time() - t0 < 3):
+        os.system(cmd_off)
     radiator_state = "Off"
     print("Radiateur éteint")
     save_history("Radiateur éteint")
 
 def allumer():
     global radiator_state
-    os.system(cmd_on)
+    t0 = time.time()
+    while(time.time() - t0 < 3):
+        os.system(cmd_on)
     radiator_state = "On"
     print("Radiateur allumé")
     save_history("Radiateur allumé")
