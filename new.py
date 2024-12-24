@@ -95,7 +95,7 @@ def set_temperature():
     global temp_consigne
     new_temp = request.json.get('temp_consigne')
     if new_temp is not None:
-        temp_consigne = new_temp
+        temp_consigne = round(new_temp)
         data["temp_consigne"] = temp_consigne
         return jsonify({"message": "Température de consigne mise à jour", "temp_consigne": temp_consigne}), 200
     return jsonify({"message": "Donnée invalide"}), 400
