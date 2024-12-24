@@ -6,8 +6,8 @@ import psutil
 import math
 import os
 import threading
-import sqlite3
 import sys
+from datetime import datetime
 
 # Configuration initiale
 sensor = adafruit_dht.DHT11(board.D4)
@@ -22,7 +22,7 @@ temp_u = 1
 # Initialisation des variables globales
 last_temp = 0
 radiator_state = "Off"
-data = {"temperature": None, "temperature_ressentie": None, "humidity": None, "radiator_state": radiator_state, "temperature_consigne": temp_consigne}
+data = {"temperature": None, "temperature_ressentie": None, "humidity": None, "radiator_state": radiator_state, "temperature_consigne": temp_consigne, "timestamp": 0}
 
 # Arrêt de tout processus libgpiod s'il existe
 for proc in psutil.process_iter():
@@ -54,13 +54,16 @@ def monitor_temperature():
             humidity = sensor.humidity
             temp_rosee = 1 / (0.072655 / (math.log(humidity / 100) + 17.27 * temp / (237.7 + temp)) - 1 / 237.7)
             temp_ressentie = temp + 0.5555 * (6.11 * math.exp(5417.7530 * (1 / 273.16 - 1 / (273.16 + temp_rosee))) - 10)
+            now = datetime.now()
+            timestamp = now.isoformat()
 
             data.update({
                 "temperature": temp,
                 "temperature_ressentie": round(temp_ressentie, 2),
                 "humidity": humidity,
                 "radiator_state": radiator_state,
-                "temperature_consigne": temp_consigne
+                "temperature_consigne": temp_consigne,
+                "timestamp": timestamp
             })
 
             if last_temp != temp_ressentie:
