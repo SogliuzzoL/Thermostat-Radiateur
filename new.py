@@ -21,7 +21,7 @@ temp_u = 1
 
 # Initialisation des variables globales
 last_temp = 0
-radiator_state = "Off"
+radiator_state = False
 data = {"temperature": None, "temperature_ressentie": None, "humidity": None, "radiator_state": radiator_state, "temperature_consigne": temp_consigne, "timestamp": 0}
 
 # Arrêt de tout processus libgpiod s'il existe
@@ -34,7 +34,7 @@ def eteindre():
     t0 = time.time()
     while(time.time() - t0 < 3):
         os.system(cmd_off)
-    radiator_state = "Off"
+    radiator_state = False
     print("Radiateur éteint")
 
 def allumer():
@@ -42,7 +42,7 @@ def allumer():
     t0 = time.time()
     while(time.time() - t0 < 3):
         os.system(cmd_on)
-    radiator_state = "On"
+    radiator_state = True
     print("Radiateur allumé")
 
 # Fonction modifiée pour monitor_temperature
