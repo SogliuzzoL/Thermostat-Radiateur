@@ -82,6 +82,7 @@ def monitor_temperature():
                 .tag("location", "home") \
                 .field("temperature", temp) \
                 .field("humidity", humidity) \
+                .field("radiator_state", radiator_state) \
                 .field("temperature_ressentie", round(temp_ressentie, 2)) \
                 .field("temperature_consigne", temp_consigne) \
                 .time(timestamp)
