@@ -18,8 +18,7 @@ INFLUXDB_BUCKET = "bucket"
 
 # Créer un client InfluxDB
 client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG)
-write_api = client.write_api(write_options=Dialect.SYNCHRONOUS)
-
+write_api = client.write_api()
 
 # Configuration initiale
 sensor = adafruit_dht.DHT11(board.D4)
@@ -77,7 +76,7 @@ def monitor_temperature():
                 "temperature_consigne": temp_consigne,
                 "timestamp": timestamp
             })
-            
+
             # Enregistrer dans InfluxDB
             point = Point("temperature_data") \
                 .tag("location", "home") \
