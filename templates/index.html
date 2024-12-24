@@ -12,35 +12,10 @@
     <p>Température ressentie : {{ data.temperature_ressentie }}°C</p>
     <p>Humidité : {{ data.humidity }}%</p>
     <p>État du radiateur : {{ data.radiator_state }}</p>
-
     <h2>Réglage de la température</h2>
     <label for="temp_consigne">Température de consigne :</label>
     <input type="number" id="temp_consigne" step="0.1" value="{{ data.temp_consigne }}" required>
     <button onclick="updateTemperature()">Mettre à jour</button>
-
-    <h2>Historique</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>État</th>
-                <th>Température</th>
-                <th>Humidité</th>
-                <th>Température ressentie</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in history %}
-            <tr>
-                <td>{{ record.time }}</td>
-                <td>{{ record.state }}</td>
-                <td>{{ record.temperature or 'N/A' }}°C</td>
-                <td>{{ record.humidity or 'N/A' }}%</td>
-                <td>{{ record.temperature_ressentie or 'N/A' }}°C</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
     <script>
         function updateTemperature() {

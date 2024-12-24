@@ -36,7 +36,6 @@ def eteindre():
         os.system(cmd_off)
     radiator_state = "Off"
     print("Radiateur éteint")
-    save_history("Radiateur éteint")
 
 def allumer():
     global radiator_state
@@ -45,46 +44,6 @@ def allumer():
         os.system(cmd_on)
     radiator_state = "On"
     print("Radiateur allumé")
-    save_history("Radiateur allumé")
-
-# Configuration de la base de données
-conn = sqlite3.connect('radiator_history.db', check_same_thread=False)
-cursor = conn.cursor()
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        time TEXT NOT NULL,
-        state TEXT NOT NULL,
-        temperature REAL,
-        humidity REAL,
-        temperature_ressentie REAL
-    )
-''')
-conn.commit()
-
-# Fonction mise à jour pour sauvegarder l'historique
-def save_history(state, temperature=None, humidity=None, temperature_ressentie=None):
-    time_now = time.strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute(
-        'INSERT INTO history (time, state, temperature, humidity, temperature_ressentie) VALUES (?, ?, ?, ?, ?)',
-        (time_now, state, temperature, humidity, temperature_ressentie)
-    )
-    conn.commit()
-
-def get_history():
-    cursor.execute('SELECT * FROM history ORDER BY time DESC')
-    rows = cursor.fetchall()
-    history = []
-    for row in rows:
-        history.append({
-            "id": row[0],
-            "time": row[1],
-            "state": row[2],
-            "temperature": row[3],
-            "humidity": row[4],
-            "temperature_ressentie": row[5]
-        })
-    return history
 
 # Fonction modifiée pour monitor_temperature
 def monitor_temperature():
@@ -110,10 +69,8 @@ def monitor_temperature():
 
                 if temp_consigne - temp_u >= temp:
                     allumer()
-                    save_history("Radiateur allumé", temp, humidity, temp_ressentie)
                 elif temp_consigne + temp_u <= temp:
                     eteindre()
-                    save_history("Radiateur éteint", temp, humidity, temp_ressentie)
         except RuntimeError as error:
             print(f"RuntimeError: {error.args[0]}")
         except Exception as error:
@@ -127,8 +84,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    history = get_history()
-    return render_template('index.html', data=data, history=history)
+    return render_template('index.html', data=data)
 
 @app.route('/data')
 def get_data():
