@@ -16,8 +16,8 @@ code_off = 2169996288
 user = "sogliuzzo-loris"
 cmd_on = f"/home/{user}/433Utils/RPi_utils/codesend {code_on}"
 cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
-temp_consigne = 24
-temp_u = 0.5
+temp_consigne = 20
+temp_u = 1
 
 # Initialisation des variables globales
 last_temp = 0
