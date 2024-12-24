@@ -8,17 +8,18 @@ import os
 import threading
 import sys
 from datetime import datetime
-from influxdb_client import InfluxDBClient, Point, Dialect
+import influxdb_client, os, time
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
 
-# Configuration InfluxDB
-INFLUXDB_URL = "http://192.168.1.101:8086"  # L'URL de votre serveur InfluxDB
-INFLUXDB_TOKEN = "0iM0ad5l-y6C98RELl4kjOdpgKSvGvHqnDMDAAScqKisQibacYqFk1rAOOpIUdmUMpzVcurx51xRRFsZVGCurw=="
-INFLUXDB_ORG = "GottaGras"
-INFLUXDB_BUCKET = "bucket"
+token = os.environ.get("INFLUXDB_TOKEN")
+org = "GottaGras"
+url = "http://192.168.1.101:8086"
 
-# Créer un client InfluxDB
-client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG)
-write_api = client.write_api()
+write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
+
+bucket="Radiateur"
+write_api = write_client.write_api(write_options=SYNCHRONOUS)
 
 # Configuration initiale
 sensor = adafruit_dht.DHT11(board.D4)
@@ -77,17 +78,17 @@ def monitor_temperature():
                 "timestamp": timestamp
             })
 
-            # Enregistrer dans InfluxDB
-            point = Point("temperature_data") \
-                .tag("location", "home") \
-                .field("temperature", temp) \
-                .field("humidity", humidity) \
-                .field("radiator_state", radiator_state) \
-                .field("temperature_ressentie", round(temp_ressentie, 2)) \
-                .field("temperature_consigne", temp_consigne) \
-                .time(timestamp)
+            point = (
+                Point("measurement1")
+                .tag("Emplacement", "chambre")
+                .field("radiator_state", radiator_state)
+                .field("temperature_consigne", temp_consigne)
+                .field("temperature", temp)
+                .field("temperature_ressentie", round(temp_ressentie, 2))
+                .field("humidity", humidity)
+            )
+            write_api.write(bucket=bucket, org=org, record=point)
             
-            write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=point)
             if last_temp != temp_ressentie:
                 print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
                 last_temp = temp_ressentie
