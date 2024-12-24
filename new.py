@@ -22,7 +22,7 @@ temp_u = 1
 # Initialisation des variables globales
 last_temp = 0
 radiator_state = "Off"
-data = {"temperature": None, "temperature_ressentie": None, "humidity": None, "radiator_state": radiator_state, "temp_consigne": temp_consigne}
+data = {"temperature": None, "temperature_ressentie": None, "humidity": None, "radiator_state": radiator_state, "temperature_consigne": temp_consigne}
 
 # Arrêt de tout processus libgpiod s'il existe
 for proc in psutil.process_iter():
