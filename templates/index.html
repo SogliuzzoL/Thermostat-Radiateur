@@ -13,10 +13,24 @@
     <p>Humidité : {{ data.humidity }}%</p>
     <p>État du radiateur : {{ data.radiator_state }}</p>
     <h2>Réglage de la température</h2>
-    <form action="/set_temperature" method="post">
-        <label for="temp_consigne">Température de consigne :</label>
-        <input type="number" id="temp_consigne" name="temp_consigne" step="0.1" value="{{ data.temperature_consigne }}" required>
-        <button type="submit">Mettre à jour</button>
-    </form>
+    <label for="temp_consigne">Température de consigne :</label>
+    <input type="number" id="temp_consigne" step="0.1" value="{{ data.temp_consigne }}" required>
+    <button onclick="updateTemperature()">Mettre à jour</button>
+
+    <script>
+        function updateTemperature() {
+            const temp_consigne = document.getElementById('temp_consigne').value;
+            fetch('/set_temperature', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ temp_consigne: parseFloat(temp_consigne) })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Erreur :', error));
+        }
+    </script>
 </body>
 </html>
