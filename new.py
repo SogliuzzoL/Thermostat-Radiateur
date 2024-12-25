@@ -30,6 +30,7 @@ cmd_on = f"/home/{user}/433Utils/RPi_utils/codesend {code_on}"
 cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
 temp_consigne = 20
 temp_u = 1
+consigne_change = False
 
 # Initialisation des variables globales
 last_temp = 0
@@ -59,7 +60,7 @@ def allumer():
 
 # Fonction modifiée pour monitor_temperature
 def monitor_temperature():
-    global last_temp, data, temp_consigne
+    global last_temp, data, temp_consigne, consigne_change
     while True:
         try:
             temp = sensor.temperature
@@ -89,10 +90,10 @@ def monitor_temperature():
             )
             write_api.write(bucket=bucket, org=org, record=point)
             
-            if last_temp != temp_ressentie:
+            if last_temp != temp_ressentie or consigne_change:
                 print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
                 last_temp = temp_ressentie
-
+                consigne_change = False
                 if temp_consigne - temp_u >= temp:
                     allumer()
                 elif temp_consigne + temp_u <= temp:
@@ -118,11 +119,12 @@ def get_data():
 
 @app.route('/set_temperature', methods=['POST'])
 def set_temperature():
-    global temp_consigne
+    global temp_consigne, consigne_change
     new_temp = request.json.get('temp_consigne')
     if new_temp is not None:
         temp_consigne = round(new_temp)
         data["temperature_consigne"] = temp_consigne
+        consigne_change = True
         return jsonify({"message": "Température de consigne mise à jour", "temp_consigne": temp_consigne}), 200
     return jsonify({"message": "Donnée invalide"}), 400
 
