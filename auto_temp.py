@@ -11,7 +11,7 @@ statue_jour = False
 
 while True:
     now = datetime.now()
-    if now.hour >= 9 and now.hour < 23:
+    if now.hour >= debut_jour and now.hour < fin_jour:
         consigne = {'temp_consigne': temp_jour}
     else:
         consigne = {'temp_consigne': temp_nuit}
