@@ -3,7 +3,7 @@ from datetime import datetime
 import time
 
 temp_nuit = 19
-temp_jour = 22
+temp_jour = 21
 url = 'https://raspi.sogliuzzo.com/set_temperature'
 debut_jour = 9
 fin_jour = 23
