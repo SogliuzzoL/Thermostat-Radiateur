@@ -103,6 +103,10 @@ def monitor_temperature():
         except Exception as error:
             sensor.exit()
             print(f"Exception: {error}")
+        except OSError as error:
+            print(f"OSError: {error}")
+        except ValueError as error:
+            print(f"ValueError: {error}")
         sys.stdout.flush()
         time.sleep(2)
 
