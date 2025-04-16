@@ -58,9 +58,9 @@ def allumer():
     radiator_state = True
     print("Radiateur allumé")
 
-# Fonction modifiée pour monitor_temperature
 def monitor_temperature():
-    global last_temp, data, temp_consigne, consigne_change
+    global last_temp, data, temp_consigne, consigne_change, write_api, write_client
+
     while True:
         try:
             temp = sensor.temperature
@@ -88,27 +88,44 @@ def monitor_temperature():
                 .field("temperature_ressentie", round(temp_ressentie, 2))
                 .field("humidity", humidity)
             )
-            write_api.write(bucket=bucket, org=org, record=point)
-            
+
+            try:
+                write_api.write(bucket=bucket, org=org, record=point)
+            except Exception as e:
+                print(f"[InfluxDB] Erreur d'écriture : {e}")
+                print("[InfluxDB] Tentative de reconnexion...")
+                try:
+                    write_client.__del__()  # Fermer proprement
+                except:
+                    pass
+                time.sleep(2)
+                write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
+                write_api = write_client.write_api(write_options=SYNCHRONOUS)
+                print("[InfluxDB] Reconnexion réussie.")
+
             if last_temp != temp_ressentie or consigne_change:
-                print("Temperature: {}*C   Humidity: {}%  Temperature ressentie: {}*C   Temperature rosee: {}*C".format(temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
+                print("Température: {}°C   Humidité: {}%  Temp. ressentie: {}°C   Temp. rosée: {}°C".format(
+                    temp, humidity, round(temp_ressentie, 2), round(temp_rosee, 2)))
                 last_temp = temp_ressentie
                 consigne_change = False
                 if temp_consigne - temp_u >= temp:
                     allumer()
                 elif temp_consigne + temp_u <= temp:
                     eteindre()
+
         except RuntimeError as error:
-            print(f"RuntimeError: {error.args[0]}")
+            print(f"[Sensor] RuntimeError: {error.args[0]}")
         except Exception as error:
             sensor.exit()
-            print(f"Exception: {error}")
+            print(f"[Sensor] Exception: {error}")
         except OSError as error:
-            print(f"OSError: {error}")
+            print(f"[Sensor] OSError: {error}")
         except ValueError as error:
-            print(f"ValueError: {error}")
+            print(f"[Sensor] ValueError: {error}")
+
         sys.stdout.flush()
         time.sleep(2)
+
 
 # Démarrage du serveur Flask
 app = Flask(__name__)
