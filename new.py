@@ -7,6 +7,7 @@ import math
 import os
 import threading
 import sys
+import requests
 from datetime import datetime
 import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -58,6 +59,20 @@ def allumer():
     radiator_state = True
     print("Radiateur allumé")
 
+def get_outdoor_temperature(city="Marseille"):
+    API_KEY = os.environ.get("16e18111216e4f1faf1123911252404")  # Mets ta clé dans une variable d'environnement
+    url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={city}&aqi=no"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        return data["current"]["temp_c"]
+    except Exception as e:
+        print(f"[WeatherAPI] Erreur lors de la récupération météo : {e}")
+        return None
+
+
 def monitor_temperature():
     global last_temp, data, temp_consigne, consigne_change, write_api, write_client
 
@@ -69,16 +84,18 @@ def monitor_temperature():
             temp_ressentie = temp + 0.5555 * (6.11 * math.exp(5417.7530 * (1 / 273.16 - 1 / (273.16 + temp_rosee))) - 10)
             now = datetime.now()
             timestamp = now.isoformat()
-
+            temp_exterieure = get_outdoor_temperature()
+            
             data.update({
                 "temperature": temp,
                 "temperature_ressentie": round(temp_ressentie, 2),
                 "humidity": humidity,
                 "radiator_state": radiator_state,
                 "temperature_consigne": temp_consigne,
+                "temperature_exterieure": temp_exterieure,
                 "timestamp": timestamp
             })
-
+            
             point = (
                 Point("measurement1")
                 .tag("Emplacement", "chambre")
@@ -88,6 +105,9 @@ def monitor_temperature():
                 .field("temperature_ressentie", round(temp_ressentie, 2))
                 .field("humidity", humidity)
             )
+            
+            if temp_exterieure is not None:
+                point.field("temperature_exterieure", temp_exterieure)
 
             try:
                 write_api.write(bucket=bucket, org=org, record=point)
