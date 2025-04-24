@@ -59,7 +59,7 @@ def allumer():
     radiator_state = True
     print("Radiateur allumé")
 
-def get_outdoor_temperature(city="Marseille"):
+def get_outdoor_temperature(city="Ensues-La-Redonne"):
     API_KEY = "16e18111216e4f1faf1123911252404"
     url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={city}&aqi=no"
 
