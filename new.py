@@ -144,7 +144,7 @@ def monitor_temperature():
             print(f"[Sensor] ValueError: {error}")
 
         sys.stdout.flush()
-        time.sleep(2)
+        time.sleep(5)
 
 
 # Démarrage du serveur Flask
