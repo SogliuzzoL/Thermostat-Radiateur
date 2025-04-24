@@ -60,7 +60,7 @@ def allumer():
     print("Radiateur allumé")
 
 def get_outdoor_temperature(city="Marseille"):
-    API_KEY = os.environ.get("16e18111216e4f1faf1123911252404")  # Mets ta clé dans une variable d'environnement
+    API_KEY = "16e18111216e4f1faf1123911252404"
     url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={city}&aqi=no"
 
     try:
