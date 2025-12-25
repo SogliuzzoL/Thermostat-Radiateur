@@ -13,7 +13,7 @@ cmd_on = f"/home/{user}/433Utils/RPi_utils/codesend {code_on}"
 cmd_off = f"/home/{user}/433Utils/RPi_utils/codesend {code_off}"
 
 # --- Variables d'État ---
-temp_consigne = 19
+temp_consigne = 15
 hysteresis = 1
 system_mode = "auto"
 radiator_state = False
@@ -26,7 +26,7 @@ def piloter_hardware(state):
     cmd = cmd_on if state else cmd_off
     print(f"[Hardware] Envoi du signal : {'ALLUMER' if state else 'ÉTEINDRE'}")
     # Envoi répété pour garantir la réception par le radiateur
-    for _ in range(3):
+    for _ in range(10):
         os.system(cmd)
         time.sleep(0.2)
     radiator_state = state
